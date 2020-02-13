@@ -18,7 +18,7 @@ Run the following:
 
 In your browser visit: ```http://localhost:8000```
 
-## Deploy on AWS
+## CircleCI deploy on AWS
 
 ### Note: 
 CircleCI requires IAM user access key id + secret key. Create environmental variables for these values in CircleCI web console under project system gear icon:
