@@ -28,6 +28,8 @@ CircleCI requires IAM user access key id + secret key. Create environmental vari
 
 This solution uses CircleCI to deploy EC2 resources using AWS CloudFormation.  It can be used as an example application in a workshop, with multiple stacks in the same account.
 
+## Deploy on AWS via CloudFormation service with AWS CLI
+
 Create shared resources (create once):
 ```
 aws cloudformation deploy --stack-name ghc-workshop-shared-resources --template-file cfn/shared_resources.yml --capabilities CAPABILITY_NAMED_IAM --parameter-overrides WorkshopName="ghc-workshop"
