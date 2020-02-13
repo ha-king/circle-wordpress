@@ -5,6 +5,15 @@ jobs:
       - image: amazonlinux
     steps:
       - checkout
+  test:
+    docker:
+      - image: amazonlinux
+    steps:
+      - checkout
+      - run:
+          name: Validate CFN templates via AWS CLI
+          command: |
+            for i in cfn/*.yml; do aws cloudformation validate-template --template-body file://cfn/$i ; done
   deploy:
     docker:
       - image: amazonlinux
@@ -41,10 +50,13 @@ workflows:
   build_approve_deploy:
     jobs:
       - build
+      - test:
+          requires:
+            - build
       - hold:
           type: approval
           requires:
-            - build
+            - test
       - deploy:
           requires:
             - hold
