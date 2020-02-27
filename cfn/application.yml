@@ -31,7 +31,7 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          echo "version 1.0" > version.txt
+          echo "version 1.1" > version.txt
           yum -y update
           yum install -y ruby git
           cd /home/ec2-user
