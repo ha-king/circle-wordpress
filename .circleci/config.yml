@@ -57,7 +57,7 @@ workflows:
       - test:
           requires:
             - build
-      - hold:
+      - approve:
           type: approval
           requires:
             - test
