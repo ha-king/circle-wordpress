@@ -1,7 +1,7 @@
 Description:
   This template sets up the workshop application on an AutoScaling group,
-  behind an Application Load Balancer, with a CodeDeploy application.
-  The workshop will need one stack of this template per team.
+  behind an Application Load Balancer. The workshop will need one 
+  stack of this template per team.
 
 Parameters:
   SharedResourceStack:
@@ -14,6 +14,10 @@ Parameters:
   LatestAmiId:
     Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
     Default: "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2"
+  GitHubUser:
+    Description: User name for GitHub
+    Type: "String"
+    Default: "ha-king"
 
 Resources:
   LaunchConfig:
@@ -38,7 +42,7 @@ Resources:
           ##################
           # Clone GHC repo #
           ##################
-          git clone https://github.com/ha-king/circle-ghc-workshop.git
+          git clone https://github.com/${GitHubUser}/circle-ghc-workshop.git
           cd circle-ghc-workshop
           ########################
           # Install Dependencies #
