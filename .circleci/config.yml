@@ -47,11 +47,7 @@ jobs:
       - run:
           name: Deploy Application via AWS CLI
           command: |
-            if ! aws cloudformation describe-stacks --stack-name ghc-workshop-application-$CIRCLE_PROJECT_USERNAME --region us-west-2 ; then
-              echo -e "No changes detected..."
-            else
-              aws cloudformation deploy --stack-name ghc-workshop-application-$CIRCLE_PROJECT_USERNAME --template-file cfn/application.yml --parameter-overrides SharedResourceStack="ghc-workshop-shared-resources" --region us-west-2 
-            fi
+            aws cloudformation deploy --stack-name ghc-workshop-application-$CIRCLE_PROJECT_USERNAME --template-file cfn/application.yml --parameter-overrides SharedResourceStack="ghc-workshop-shared-resources" --region us-west-2 || exit 0
           no_output_timeout: 20m
 workflows:
   version: 2
