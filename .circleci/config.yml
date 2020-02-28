@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Deploy Application via AWS CLI
           command: |
-            if ! aws cloudformation describe-stack --stack-name ghc-workshop-application-$CIRCLE_PROJECT_USERNAME --template-file cfn/application.yml --parameter-overrides SharedResourceStack="ghc-workshop-shared-resources" --region us-west-2 ; then
+            if ! aws cloudformation describe-stacks --stack-name ghc-workshop-application-$CIRCLE_PROJECT_USERNAME --template-file cfn/application.yml --parameter-overrides SharedResourceStack="ghc-workshop-shared-resources" --region us-west-2 ; then
               echo -e "No changes detected..."
             else
               aws cloudformation deploy --stack-name ghc-workshop-application-$CIRCLE_PROJECT_USERNAME --template-file cfn/application.yml --parameter-overrides SharedResourceStack="ghc-workshop-shared-resources" --region us-west-2 
