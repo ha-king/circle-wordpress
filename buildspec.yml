@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_TAG: "v6"
+    IMAGE_TAG: "v7"
 
 phases:
   install:
