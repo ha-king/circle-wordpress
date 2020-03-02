@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_TAG: v7
+    IMAGE_TAG: v8
 
 phases:
   install:
@@ -23,4 +23,4 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - aws cloudformation update-stack --stack-name ghc-ecs-fargate --use-previous-template --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - aws cloudformation update-stack --stack-name ghc-ecs-fargate --use-previous-template --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG ParameterKey=ServiceName, ParameterValue=ghc ParameterKey=AccountNetworkingStackName, ParameterValue=ghc-vpc-privatelink
