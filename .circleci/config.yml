@@ -22,11 +22,16 @@ jobs:
       - run:
           name: Build image and push to ECR
           command: |
+            aws s3 cp s3://ghc-utility-99r8/version.txt .
+            i=$(cat version.txt)
+            echo $i
+            i=i+1
+            echo $i
             #$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             #docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
             #docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             #docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-            echo "export  IMAGE_TAG=abc" >> $BASH_ENV
+            echo -e "export  IMAGE_TAG=$i" >> $BASH_ENV
             source $BASH_ENV
             echo $IMAGE_TAG
           environment:
