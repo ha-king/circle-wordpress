@@ -4,6 +4,13 @@ jobs:
     machine: true
     steps:
       - checkout
+      - run: mkdir -p workspace
+      - run: echo "export IMAGE_TAG=v2" >> workspace/new-env-vars
+      - persist_to_workspace:
+          root: workspace
+          paths:
+              - new-env-vars
+      - run: cat workspace/new-env-vars >> $BASH_ENV
       - run:
           name: Get Pip
           command: |
@@ -19,11 +26,10 @@ jobs:
             echo "export IMAGE_REPO_NAME=ghc" >> $BASH_ENV
             echo "export AWS_ACCOUNT_ID=502627520384" >> $BASH_ENV
             echo "export IMAGE_TAG=$CIRCLE_BUILD_NUM" >> $BASH_ENV
-            echo "v2" > version.txt
+            echo $BASH_ENV 
       - run:
           name: Build image and push to ECR
           command: |
-            cat version.txt
             $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
             docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
@@ -37,11 +43,14 @@ jobs:
     docker:
       - image: amazonlinux
     steps:
+      - attach_workspace:
+          at: /tmp/cci-test/workspace
       - checkout
+      - run: cat workspace/new-env-vars >> $BASH_ENV
       - run:
-          name: Test file
+          name: Test var
           command: |
-            cat version.txt
+            echo $BASH_ENV
       - run:
           name: Get Pip
           command: |
