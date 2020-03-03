@@ -3,16 +3,15 @@ Description: Deploy a service on AWS Fargate, private cluster, public access ALB
 Parameters:
   AccountNetworkingStackName:
     Type: String
-    Default: accountb-networking-stack
+    Default: ghc-vpc-privatelink
     Description: The name of the parent Fargate networking stack that you created. Necessary
                  to locate and reference resources created by that stack.
   ServiceName:
     Type: String
-    Default: ecrprivatelink
+    Default: ghc-2020
     Description: Service name
   ImageUrl:
     Type: String
-    Default: nginx
     Description: Docker image URL
   ContainerPort:
     Type: Number

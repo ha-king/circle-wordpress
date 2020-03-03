@@ -62,10 +62,10 @@ jobs:
           command: |
             pip install awscli
       - run:
-          name: Deploy Shared Resources
+          name: Deploy VPC Resources w/ PrivateLink
           command: |
-            if ! aws cloudformation describe-stacks --stack-name ghc-workshop-shared-resources --region us-west-2 ;  then
-              aws cloudformation deploy --stack-name ghc-workshop-shared-resources --template-file cfn/shared_resources.yml --capabilities CAPABILITY_NAMED_IAM --parameter-overrides WorkshopName="ghc-workshop" --region us-west-2
+            if ! aws cloudformation describe-stacks --stack-name ghc-vpc-privatelink --region us-west-2 ;  then
+              aws cloudformation create-stack --stack-name ghc-vpc-privatelink --template-file cfn/network-stack.yml --capabilities CAPABILITY_NAMED_IAM --region us-west-2
             else
               echo -e "Stack exists..."
             fi
@@ -73,7 +73,7 @@ jobs:
       - run:
           name: Deploy Application
           command: |
-            aws cloudformation deploy --stack-name ghc-workshop-application-$CIRCLE_PROJECT_USERNAME --template-file cfn/application.yml --parameter-overrides SharedResourceStack="ghc-workshop-shared-resources" --region us-west-2 || exit 0
+            aws cloudformation create-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-file cfn/service-stack.yml --region us-west-2 || exit 0
           no_output_timeout: 20m
 workflows:
   version: 2
