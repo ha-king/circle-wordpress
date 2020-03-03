@@ -4,7 +4,7 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: apt-get install -y tar
+      - run: sudo apt-get install -y tar
       - run: mkdir -p workspace
       - run: echo "export IMAGE_TAG=v2" >> workspace/new-env-vars
       - persist_to_workspace:
