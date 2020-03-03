@@ -15,7 +15,7 @@ var data = [
       {
         "points": 300,
         "question": "Humans are allergic to _________",
-        "answer": "Change"
+        "answer": "Corvid-19"
       },
       {
         "points": 400,
