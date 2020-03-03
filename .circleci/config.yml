@@ -25,7 +25,7 @@ jobs:
             aws s3 cp s3://ghc-utility-99r8/version.txt .
             i=$(cat version.txt)
             echo $i
-            i=i+1
+            i=$i+1
             echo $i
             #$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
             #docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
