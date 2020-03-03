@@ -8,8 +8,8 @@ jobs:
       - run:
           name: Get Pip
           command: |
-            amazon-linux-extras install docker
-            service docker start
+            sudo amazon-linux-extras install docker
+            sudo service docker start
       - run:
           name: Get Pip
           command: |
