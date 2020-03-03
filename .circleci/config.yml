@@ -1,15 +1,9 @@
 version: 2
 jobs:
   build:
-    docker:
-      - image: amazonlinux
+    machine: true
     steps:
       - checkout
-      - run:
-          name: Get Pip
-          command: |
-            sudo amazon-linux-extras install docker
-            sudo service docker start
       - run:
           name: Get Pip
           command: |
