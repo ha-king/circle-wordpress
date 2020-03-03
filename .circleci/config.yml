@@ -8,7 +8,8 @@ jobs:
       - run:
           name: Get Pip
           command: |
-            yum install -y docker-ce
+            amazon-linux-extras install docker
+            service docker start
       - run:
           name: Get Pip
           command: |
