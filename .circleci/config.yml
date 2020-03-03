@@ -88,7 +88,7 @@ jobs:
             else
               aws cloudformation update-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-body file://cfn/service-stack.yml --region us-west-2 --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
             fi  
-        no_output_timeout: 20m
+          no_output_timeout: 20m
       - run:
           name: Push Version bump to S3
           command: |
