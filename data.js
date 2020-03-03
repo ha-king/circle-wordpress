@@ -9,8 +9,8 @@ var data = [
       },
       {
         "points": 200,
-        "question": "You manage ________, you lead _________",
-        "answer": "You manage <i>things</i>, you lead <i>people</i>"
+        "question": "I don't always test my code, but when I do, I do it in  ____________",
+        "answer": "production."
       },
       {
         "points": 300,
