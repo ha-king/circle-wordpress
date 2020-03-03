@@ -10,6 +10,10 @@ jobs:
           command: |
             curl -O https://bootstrap.pypa.io/get-pip.py && python get-pip.py
       - run:
+          name: Pip install AWS cli
+          command: |
+            pip install awscli
+      - run:
           name: Setup Environment Variables
           command: |
             echo "export AWS_DEFAULT_REGION=us-west-2" >> $BASH_ENV
