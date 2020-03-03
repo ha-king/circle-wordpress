@@ -92,7 +92,7 @@ jobs:
              i=$(cat version.txt)
              i=$((i+1))
              echo "$i" > version.txt
-             aws s3 cp . s3://ghc-utility-99r8/version.txt
+             aws s3 cp version.txt s3://ghc-utility-99r8/version.txt
 workflows:
   version: 2
   build_approve_deploy:
