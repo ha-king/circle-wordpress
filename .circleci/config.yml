@@ -83,7 +83,7 @@ jobs:
       - run:
           name: Deploy Application
           command: |
-            if ! aws cloudformation describe-stacks --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --region us-west-2; then
+            if ! aws cloudformation describe-stacks --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --region us-west-2 ; then
               aws cloudformation create-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-body file://cfn/service-stack.yml --region us-west-2 --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
             else
               aws cloudformation update-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-body file://cfn/service-stack.yml --region us-west-2 --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
