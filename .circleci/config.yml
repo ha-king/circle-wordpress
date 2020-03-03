@@ -83,8 +83,12 @@ jobs:
       - run:
           name: Deploy Application
           command: |
-            aws cloudformation create-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-body file://cfn/service-stack.yml --region us-west-2 --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
-          no_output_timeout: 20m
+            if ! aws cloudformation describe-stacks --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --region us-west-2; then
+              aws cloudformation create-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-body file://cfn/service-stack.yml --region us-west-2 --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
+            else
+              aws cloudformation update-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-body file://cfn/service-stack.yml --region us-west-2 --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
+            fi  
+        no_output_timeout: 20m
       - run:
           name: Push Version bump to S3
           command: |
