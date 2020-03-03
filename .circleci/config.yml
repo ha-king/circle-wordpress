@@ -4,7 +4,6 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: sudo apt-get install -y tar
       - run: mkdir -p workspace
       - run: echo "export IMAGE_TAG=v2" >> workspace/new-env-vars
       - persist_to_workspace:
@@ -12,12 +11,13 @@ jobs:
           paths:
               - new-env-vars
       - run: cat workspace/new-env-vars >> $BASH_ENV
+      - run: echo $IMAGE_TAG
       - run:
           name: Get Pip
           command: |
             curl -O https://bootstrap.pypa.io/get-pip.py && python get-pip.py
       - run:
-          name: Pip install AWS cli
+          name: Pip install AWS CLI
           command: |
             pip install awscli
       - run:
@@ -27,15 +27,14 @@ jobs:
             echo "export IMAGE_REPO_NAME=ghc" >> $BASH_ENV
             echo "export AWS_ACCOUNT_ID=502627520384" >> $BASH_ENV
             echo "export IMAGE_TAG=$CIRCLE_BUILD_NUM" >> $BASH_ENV
-            env
       - run:
           name: Build image and push to ECR
           command: |
-            $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-            docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-            docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-            env
+            #$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+            #docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+            #docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+            #docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+            echo $IMAGE_TAG
           environment:
             AWS_DEFAULT_REGION: "us-west-2"
             AWS_ACCOUNT_ID: "502627520384"
@@ -45,7 +44,7 @@ jobs:
     docker:
       - image: amazonlinux
     steps:
-      - run: yum install -y tar
+      - run: yum install -y tar gzip
       - attach_workspace:
           at: /tmp/cci-test/workspace
       - checkout
