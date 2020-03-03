@@ -27,7 +27,7 @@ jobs:
             echo "export IMAGE_REPO_NAME=ghc" >> $BASH_ENV
             echo "export AWS_ACCOUNT_ID=502627520384" >> $BASH_ENV
             echo "export IMAGE_TAG=$CIRCLE_BUILD_NUM" >> $BASH_ENV
-            echo $BASH_ENV 
+            env
       - run:
           name: Build image and push to ECR
           command: |
@@ -35,6 +35,7 @@ jobs:
             docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
             docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+            env
           environment:
             AWS_DEFAULT_REGION: "us-west-2"
             AWS_ACCOUNT_ID: "502627520384"
@@ -44,6 +45,7 @@ jobs:
     docker:
       - image: amazonlinux
     steps:
+      - run: yum install -y tar
       - attach_workspace:
           at: /tmp/cci-test/workspace
       - checkout
@@ -51,7 +53,7 @@ jobs:
       - run:
           name: Test var
           command: |
-            echo $BASH_ENV
+            env
       - run:
           name: Get Pip
           command: |
