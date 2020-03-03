@@ -8,7 +8,7 @@ jobs:
       - run:
           name: Get Pip
           command: |
-            curl -O https://bootstrap.pypa.io/get-pip.py && python get-pip.py- run:
+            curl -O https://bootstrap.pypa.io/get-pip.py && python get-pip.py
       - run:
           name: Setup Environment Variables
           command: |
@@ -33,7 +33,7 @@ jobs:
           command: |
             curl -O https://bootstrap.pypa.io/get-pip.py && python get-pip.py
       - run:
-          name: Pip install AWS CLI
+          name: Pip install
           command: |
             pip install awscli
       - run:
