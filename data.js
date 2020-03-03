@@ -5,7 +5,7 @@ var data = [
       {
         "points": 100,
         "question": "It's easier to ask forgiveness than it is _______________",
-        "answer": "Become an AWS Solution Architect Professional"
+        "answer": "to hack this solution."
       },
       {
         "points": 200,
