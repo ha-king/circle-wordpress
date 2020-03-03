@@ -5,6 +5,24 @@ jobs:
       - image: amazonlinux
     steps:
       - checkout
+      - run:
+          name: Get Pip
+          command: |
+            curl -O https://bootstrap.pypa.io/get-pip.py && python get-pip.py- run:
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export AWS_DEFAULT_REGION=us-west-2" >> $BASH_ENV
+            echo "export IMAGE_REPO_NAME=ghc" >> $BASH_ENV
+            echo "export AWS_ACCOUNT_ID=502627520384" >> $BASH_ENV
+            echo "export IMAGE_TAG=$CIRCLE_BUILD_NUM" >> $BASH_ENV
+      - run:
+          name: Build image and push to ECR
+          command: |
+            $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+            docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+            docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   test:
     docker:
       - image: amazonlinux
@@ -19,7 +37,7 @@ jobs:
           command: |
             pip install awscli
       - run:
-          name: Validate CFN templates via AWS CLI
+          name: Validate CFN templates
           command: |
             for i in cfn/*.yml; do aws cloudformation validate-template --template-body file://$i --region us-west-2 ; done
   deploy:
@@ -32,11 +50,11 @@ jobs:
           command: |
             curl -O https://bootstrap.pypa.io/get-pip.py && python get-pip.py
       - run:
-          name: Pip install AWS CLI
+          name: Pip install
           command: |
             pip install awscli
       - run:
-          name: Deploy Shared Resources via AWS CLI
+          name: Deploy Shared Resources
           command: |
             if ! aws cloudformation describe-stacks --stack-name ghc-workshop-shared-resources --region us-west-2 ;  then
               aws cloudformation deploy --stack-name ghc-workshop-shared-resources --template-file cfn/shared_resources.yml --capabilities CAPABILITY_NAMED_IAM --parameter-overrides WorkshopName="ghc-workshop" --region us-west-2
@@ -45,7 +63,7 @@ jobs:
             fi
           no_output_timeout: 20m
       - run:
-          name: Deploy Application via AWS CLI
+          name: Deploy Application
           command: |
             aws cloudformation deploy --stack-name ghc-workshop-application-$CIRCLE_PROJECT_USERNAME --template-file cfn/application.yml --parameter-overrides SharedResourceStack="ghc-workshop-shared-resources" --region us-west-2 || exit 0
           no_output_timeout: 20m
