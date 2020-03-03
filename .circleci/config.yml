@@ -12,13 +12,6 @@ jobs:
           name: Pip install AWS CLI
           command: |
             pip install awscli
-      #- run:
-      #    name: Setup Environment Variables
-      #    command: |
-      #      echo "export AWS_DEFAULT_REGION=us-west-2" >> $BASH_ENV
-      #      echo "export IMAGE_REPO_NAME=ghc" >> $BASH_ENV
-      #      echo "export AWS_ACCOUNT_ID=502627520384" >> $BASH_ENV
-      #      echo "export IMAGE_TAG=$CIRCLE_BUILD_NUM" >> $BASH_ENV
       - run:
           name: Build image and push to ECR
           command: |
@@ -26,14 +19,13 @@ jobs:
             i=$(cat version.txt)
             echo $i
             i=$((i+1))
-            echo $i
-            #$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-            #docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-            #docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-            #docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             echo -e "export  IMAGE_TAG=$i" >> $BASH_ENV
             source $BASH_ENV
             echo $IMAGE_TAG
+            $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+            docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+            docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
           environment:
             AWS_DEFAULT_REGION: "us-west-2"
             AWS_ACCOUNT_ID: "502627520384"
