@@ -17,13 +17,12 @@ jobs:
           command: |
             aws s3 cp s3://ghc-utility-99r8/version.txt .
             i=$(cat version.txt)
-            echo $i
             i=$((i+1))
             echo -e "export  IMAGE_TAG=$i" >> $BASH_ENV
             source $BASH_ENV
             echo $IMAGE_TAG
             $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-            docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+            docker build -t $IMAGE_REPO_NAME:v$IMAGE_TAG .
             docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
             docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
           environment:
@@ -65,8 +64,13 @@ jobs:
           command: |
             echo "export AWS_DEFAULT_REGION=us-west-2" >> $BASH_ENV
             echo "export IMAGE_REPO_NAME=ghc" >> $BASH_ENV
-            echo "export AWS_ACCOUNT_ID=502627520384" >> $BASH_ENV
-            echo "export IMAGE_TAG=$CIRCLE_BUILD_NUM" >> $BASH_ENV
+            echo "export AWS_ACCOUNT_ID=502627520384" >> $BASH_ENV            
+            aws s3 cp s3://ghc-utility-99r8/version.txt .
+            i=$(cat version.txt)
+            i=$((i+1))
+            echo -e "export  IMAGE_TAG=$i" >> $BASH_ENV
+            source $BASH_ENV
+            echo $IMAGE_TAG
       - run:
           name: Deploy VPC Resources w/ PrivateLink
           command: |
@@ -79,8 +83,16 @@ jobs:
       - run:
           name: Deploy Application
           command: |
-            aws cloudformation create-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-body file://cfn/service-stack.yml --region us-west-2 --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+            aws cloudformation create-stack --stack-name ghc-ecs-fargate-$CIRCLE_PROJECT_USERNAME --template-body file://cfn/service-stack.yml --region us-west-2 --parameters ParameterKey=ImageUrl,ParameterValue=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:v$IMAGE_TAG
           no_output_timeout: 20m
+      - run:
+          name: Push Version bump to S3
+          command: |
+             aws s3 cp s3://ghc-utility-99r8/version.txt .
+             i=$(cat version.txt)
+             i=$((i+1))
+             echo "$i" > version.txt
+             aws s3 cp . s3://ghc-utility-99r8/version.txt
 workflows:
   version: 2
   build_approve_deploy:
