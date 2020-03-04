@@ -20,7 +20,7 @@ var data = [
       {
         "points": 400,
         "question": "If it's a good idea, _______________________",
-        "answer": "Go ahead and do it"
+        "answer": "it was probably Grace Hopper's."
       }
     ]
   },
