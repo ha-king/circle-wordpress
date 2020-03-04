@@ -75,7 +75,7 @@ jobs:
           name: Deploy ECR Repository
           command: |
             if ! aws cloudformation describe-stacks --stack-name ghc-ecr-repo --region $AWS_DEFAULT_REGION ;  then
-              aws cloudformation create-stack --stack-name ghc-ecr-repo --template-file cfn/ecr-stack.yml --capabilities CAPABILITY_NAMED_IAM --region $AWS_DEFAULT_REGION --parameters ParameterKey=RepositoryName,ParameterValue=ghc ParameterName=ServiceAccount,ParameterValue=$AWS_ACCOUNT_ID
+              aws cloudformation create-stack --stack-name ghc-ecr-repo --template-file cfn/ecr-stack.yml --capabilities CAPABILITY_NAMED_IAM --region $AWS_DEFAULT_REGION --parameters ParameterKey=RepositoryName,ParameterValue=$IMAGE_REPO_NAME ParameterName=ServiceAccount,ParameterValue=$AWS_ACCOUNT_ID
             else
               echo -e "Stack exists..."
             fi
