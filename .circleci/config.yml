@@ -72,6 +72,15 @@ jobs:
             source $BASH_ENV
             echo $IMAGE_TAG
       - run:
+          name: Deploy ECR Repository
+          command: |
+            if ! aws cloudformation describe-stacks --stack-name ghc-ecr-repo --region $AWS_DEFAULT_REGION ;  then
+              aws cloudformation create-stack --stack-name ghc-ecr-repo --template-file cfn/ecr-stack.yml --capabilities CAPABILITY_NAMED_IAM --region $AWS_DEFAULT_REGION --parameters ParameterKey=RepositoryName,ParameterValue=ghc ParameterName=ServiceAccount,ParameterValue=$AWS_ACCOUNT_ID
+            else
+              echo -e "Stack exists..."
+            fi
+          no_output_timeout: 20m
+      - run:
           name: Deploy VPC Resources w/ PrivateLink
           command: |
             if ! aws cloudformation describe-stacks --stack-name ghc-vpc-privatelink --region us-west-2 ;  then
