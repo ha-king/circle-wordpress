@@ -21,7 +21,8 @@ jobs:
       - run:
           name: Validate CFN templates via AWS CLI
           command: |
-            for i in cfn/*.yml; do aws cloudformation validate-template --template-body file://$i --region us-west-2 ; done
+            env
+            #for i in cfn/*.yml; do aws cloudformation validate-template --template-body file://$i --region us-west-2 ; done
   deploy:
     docker:
       - image: amazonlinux
